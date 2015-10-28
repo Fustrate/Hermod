@@ -1,0 +1,12 @@
+{
+  "name"    : "vmg-messenger",
+  "version" : "0.0.1",
+  "main": "./dist/js/index.js",
+  "scripts": {
+    "start": "npm run compile:all && ./node_modules/.bin/electron .",
+    "compile:all": "npm run compile:js && npm run compile:css && npm run compile:html",
+    "compile:js": "coffee --compile --output dist/js src/js",
+    "compile:css": "sass -Cq --update src/css:dist/css --sourcemap=none",
+    "compile:html": "mkdir -p dist/html; cp -R src/html dist"
+  }
+}
