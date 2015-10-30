@@ -12,9 +12,10 @@
   },
   "dependencies": {
     "keytar": "^3.0.0",
-    "node-notifier": "^4.3.1"
+    "node-notifier": "^4.3.1",
+    "request": "^2.65.0"
   },
-  "repository":"",
-  "license":"UNLICENSED",
-  "private":true
+  "repository": "",
+  "license": "UNLICENSED",
+  "private": true
 }

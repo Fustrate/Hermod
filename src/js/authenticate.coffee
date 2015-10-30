@@ -1,31 +1,31 @@
-http = require 'http'
+request = require 'request'
 keytar = require 'keytar'
 
-document.getElementById('authentication-form').onClick = (e) ->
-  alert('wow')
+document.getElementById('authentication-form').onsubmit = ->
+  document.getElementById('perform-authentication').value = 'Authenticating...'
+
+  username = document.getElementById('username').value
+  password = document.getElementById('password').value
+
+  validateCredentials username, password, validationSucceeded, validationFailed
+
+  false
+
+validationSucceeded = (data) ->
+  console.log 'yay!'
+  console.log data
+validationFailed = (error) ->
+  console.log 'oh no :('
+  console.log error
+  document.getElementById('perform-authentication').value = 'Authenticate'
 
 validateCredentials = (username, password, callback, errback) ->
-  options =
-    protocol: 'https'
-    hostname: 'valenciamgmt.net'
-    port: 443
-    path: '/api/v1/authenticate',
-    method: 'POST'
+  request.post
     headers:
       'Content-Type': 'application/json'
+    url: 'http://panel.dev/api/v1/authenticate'
+    body: JSON.stringify({ username: username, password: password })
+    (error, response, body) ->
+      return errback(error) if error
 
-  req = http.request options, (res) ->
-    console.log "Status: #{res.statusCode}"
-    console.log "Headers: #{JSON.stringify(res.headers)}"
-    res.setEncoding 'utf8'
-    res.on 'data', (body) ->
-      console.log 'Body: ' + body
-
-  req.on 'error', errback
-
-  # write data to request body
-  # req.write('{"string": result}');  ///RESULT HERE IS A JSON
-
-  req.write JSON.stringify({ username: username, password: password })
-
-  req.end()
+      callback JSON.parse body
