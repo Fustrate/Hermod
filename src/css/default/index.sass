@@ -1,23 +1,39 @@
-@import "../reset"
-
-html
-  background: #fafafa
-  font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif
+.group
+  padding: 4px 6px
+  background: #cedefb
+  color: #264e94
+  text-shadow: 0 1px 1px #fff
 
 .users-list
-  padding: 1rem
-  -webkit-column-count: 2
-  -webkit-column-gap: .4rem
+  span
+    display: block
+    margin: 2px
+    padding: 2px 6px
+    cursor: pointer
 
-.users-list span
-  display: block
-  margin: 0 0 2px
-  background: #eaeaea
-  border: 1px solid #dadada
-  padding: 2px 6px
+    &.selected
+      background: #eaeaea
+      border: 1px solid #dadada
+
+    &.online
+      color: #659149
+    &.offline
+      color: #757575
+    &.idle
+      color: #c38c00
+    &.busy
+      color: #914949
+
+#content
+  top: 0
+  bottom: 32px
+  left: 0
+  right: 0
+  position: fixed
+  overflow: scroll
 
 #footer-bar
-  position: absolute
+  position: fixed
   bottom: 0
   left: 0
   right: 0

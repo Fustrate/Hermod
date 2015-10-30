@@ -1,12 +1,20 @@
 {
-  "name"    : "vmg-messenger",
-  "version" : "0.0.1",
+  "name": "vmg-messenger",
+  "version": "0.0.1",
   "main": "./dist/js/index.js",
   "scripts": {
     "start": "npm run compile:all && ./node_modules/.bin/electron .",
-    "compile:all": "npm run compile:js && npm run compile:css && npm run compile:html",
+    "compile:all": "npm run compile:js && npm run compile:css && npm run compile:html && npm run compile:fonts",
     "compile:js": "coffee --compile --output dist/js src/js",
     "compile:css": "sass -Cq --update src/css:dist/css --sourcemap=none",
-    "compile:html": "mkdir -p dist/html; cp -R src/html dist"
-  }
+    "compile:html": "mkdir -p dist/html; cp -R src/html dist",
+    "compile:fonts": "mkdir -p dist/fonts; cp -R src/fonts dist"
+  },
+  "dependencies": {
+    "keytar": "^3.0.0",
+    "node-notifier": "^4.3.1"
+  },
+  "repository":"",
+  "license":"UNLICENSED",
+  "private":true
 }

@@ -17,14 +17,18 @@ app.on 'window-all-closed', ->
 # This method will be called when Electron has finished
 # initialization and is ready to create browser windows.
 app.on 'ready', ->
-  # Create the browser window.
-  mainWindow = new BrowserWindow(width: 300, height: 650)
+  if false
+    mainWindow = new BrowserWindow(width: 300, height: 750)
+    mainWindow.loadUrl "file://#{__dirname}/../html/main.html"
+  else
+    mainWindow = new BrowserWindow(width: 300, height: 450)
+    mainWindow.loadUrl "file://#{__dirname}/../html/authenticate.html"
 
-  # and load the index.html of the app.
-  mainWindow.loadUrl "file://#{__dirname}/../html/index.html"
-
-  # Open the DevTools.
-  # mainWindow.openDevTools();
+  # require('node-notifier').notify(
+  #   title: 'My notification'
+  #   message: 'Hello, there!'
+  #   sound: true
+  # )
 
   # Emitted when the window is closed.
   mainWindow.on 'closed', ->
