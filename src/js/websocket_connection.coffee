@@ -7,20 +7,20 @@ class WebsocketConnection
     @queue = []
     @eventListeners = {}
 
-    @client.on 'connectFailed', (error) ->
-      console.log "Connect Failed: #{error.toString()}"
+    @client.on 'connectFailed', (error) =>
+      @received 'connection.failed', error.toString()
 
     @client.on 'connect', (@connection) =>
-      @connection.on 'error', (error) ->
-        console.log "Connection Error: #{error.toString()}"
+      @connection.on 'error', (error) =>
+        @received 'connection.error', error.toString()
 
-      @connection.on 'close', ->
-        console.log('Connection Closed')
+      @connection.on 'close', =>
+        @received 'connection.closed'
 
       @connection.on 'message', (message) =>
         [name, data] = JSON.parse message.utf8Data
 
-        @receivedEvent(name, data)
+        @received(name, data)
 
     @send 'connection.authenticate', token: @token
 
@@ -28,14 +28,10 @@ class WebsocketConnection
 
   addEventListeners: =>
     @on 'connection.opened', =>
-      console.log 'Connection Opened'
-
       # Make a copy of the queue so we're not endlessly cycling
       [queuedMessages, @queue] = [@queue, []]
 
-      for message in queuedMessages
-        console.log 'Trying to send again', message
-        @sendRaw message, false
+      @sendRaw message, false for message in queuedMessages
 
     @on 'connection.ping', =>
       @send 'connection.pong'
@@ -60,7 +56,7 @@ class WebsocketConnection
 
     @connection.sendUTF message
 
-  receivedEvent: (name, data) =>
+  received: (name, data) =>
     callbacks = @eventListeners[name]
 
     if callbacks

@@ -1,9 +1,17 @@
+$online: #68a441
+$offline: #959595
+$idle: #c69519
+$busy: #a83434
+
 .group
   padding: 4px 6px
   background: #cedefb
   color: #264e94
   text-shadow: 0 1px 1px #fff
   clear: both
+
+::selection
+  background: none
 
 .users-list
   clear: both
@@ -31,13 +39,14 @@
       content: "\f007"
 
     &.online
-      color: #68a441
+      color: $online
+      font-weight: bold
     &.offline
-      color: #959595
+      color: $offline
     &.idle
-      color: #c69519
+      color: $idle
     &.busy
-      color: #a83434
+      color: $busy
 
 #content
   top: 0
@@ -56,15 +65,37 @@
   line-height: 32px
   padding: 0 8px
   background: #666
-  border-top: 1px solid #444
+  border-top: 1px solid #333
   color: #eaeaea
   font-size: 0.8rem
+  text-shadow: 0 1px 1px black
+  background-image: -webkit-linear-gradient(top, #666, #444)
 
-#change-status
+#status-indicator
   cursor: pointer
 
-#connection-status
+  &.online
+    color: scale-color($online, $lightness: 25%)
+    font-weight: bold
+  &.idle
+    color: scale-color($idle, $lightness: 25%)
+    font-style: italic
+  &.busy
+    color: scale-color($busy, $lightness: 35%)
+    font-weight: bold
+
+#connection-indicator
   float: right
+
+  &:before
+    display: inline-block
+    font: normal normal normal 14px/1 FontAwesome
+    font-size: inherit
+    text-rendering: auto
+    -webkit-font-smoothing: antialiased
+    -moz-osx-font-smoothing: grayscale
+    content: "\f1e6"
+    padding-right: 4px
 
 // Max width is 600
 @media (min-width: 600px)
@@ -80,3 +111,5 @@
   .users-list span
     width: calc(100% - 4px)
     padding: 4px 6px
+  .group
+    text-align: center

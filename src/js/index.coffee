@@ -12,7 +12,7 @@ ipc.on 'debug', ->
   console.log arguments
 
 class Messenger
-  @IDLE_TIME: 10 * 60 * 1000
+  @IDLE_TIME: 0.25 * 60 * 1000
 
   mainWindow: null
   authWindow: null
@@ -32,6 +32,7 @@ class Messenger
 
       @websocket.on 'users.statuses', (users) =>
         @mainWindow?.webContents.send 'users.statuses', users
+        @mainWindow?.webContents.send 'setDisplayedStatus', users[@id]
 
       @websocket.on 'connection.authenticated', (me) =>
         @id = me.id
@@ -40,9 +41,18 @@ class Messenger
           font_size: me.font_size
           font_color: me.font_color
 
-      @websocket.on 'unread_count', (count) ->
+      @websocket.on 'unread_count', (count) =>
         @unread = parseInt(count, 10)
         @mainWindow?.webContents.send 'unread_count', @unread
+
+      @websocket.on 'connection.failed', =>
+        @mainWindow?.webContents.send 'setConnectionStatus', 'Connection Failed'
+
+      @websocket.on 'connection.opened', =>
+        @mainWindow?.webContents.send 'setConnectionStatus', 'Connected'
+
+      @websocket.on 'connection.closed', =>
+        @mainWindow?.webContents.send 'setConnectionStatus', 'Disconnected'
 
       @websocket.connect()
 
@@ -62,8 +72,8 @@ class Messenger
   openMainWindow: =>
     unless @mainWindow
       @mainWindow = new BrowserWindow
-        width: 300,
-        height: 750,
+        width: 600,
+        height: 500,
         'max-width': 600,
         'min-width': 200
 
@@ -85,4 +95,4 @@ class Messenger
 app.on 'ready', ->
   messenger = new Messenger
 
-  setInterval messenger.checkIdleTime, 5000
+  setInterval messenger.checkIdleTime, 1000
