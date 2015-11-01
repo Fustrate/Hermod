@@ -1,38 +1,88 @@
 app = require 'app'
+ipc = require 'ipc'
+keytar = require 'keytar'
 BrowserWindow = require 'browser-window'
+WebsocketConnection = require './websocket_connection'
+idle = require '@paulcbetts/system-idle-time'
 
 # Report crashes to our server.
 require('crash-reporter').start()
 
-# Keep a global reference of the window object, if you don't, the window will
-# be closed automatically when the JavaScript object is garbage collected.
-mainWindow = null
+ipc.on 'debug', ->
+  console.log arguments
 
-# Quit when all windows are closed.
-app.on 'window-all-closed', ->
-  # On OS X it is common for applications and their menu bar
-  # to stay active until the user quits explicitly with Cmd + Q
-  app.quit() if process.platform != 'darwin'
+class Messenger
+  @IDLE_TIME: 10 * 60 * 1000
+
+  mainWindow: null
+  authWindow: null
+  websocket: null
+
+  status: 'online'
+  idle: false
+
+  constructor: ->
+    storedToken = keytar.getPassword 'valenciamgmt.net', 'authToken'
+
+    if storedToken
+      @websocket = new WebsocketConnection storedToken
+
+      @websocket.on 'users.list', (roles) =>
+        @mainWindow?.webContents.send 'users.list', roles
+
+      @websocket.on 'users.statuses', (users) =>
+        @mainWindow?.webContents.send 'users.statuses', users
+
+      @websocket.on 'connection.authenticated', (me) =>
+        @id = me.id
+        @editor =
+          font_family: me.font_family
+          font_size: me.font_size
+          font_color: me.font_color
+
+      @websocket.on 'unread_count', (count) ->
+        @unread = parseInt(count, 10)
+        @mainWindow?.webContents.send 'unread_count', @unread
+
+      @websocket.connect()
+
+      @openMainWindow()
+    else
+      @openAuthWindow()
+
+  checkIdleTime: =>
+    if idle.getIdleTime() < @constructor.IDLE_TIME
+      if @idle
+        @websocket.send 'user.status', @status
+        @idle = false
+    else if !@idle
+      @idle = true
+      @websocket.send 'user.status', 'idle'
+
+  openMainWindow: =>
+    unless @mainWindow
+      @mainWindow = new BrowserWindow
+        width: 300,
+        height: 750,
+        'max-width': 600,
+        'min-width': 200
+
+      @mainWindow.loadUrl "file://#{__dirname}/../html/main.html"
+
+  openAuthWindow: =>
+    unless @authWindow
+      @authWindow = new BrowserWindow
+        width: 300,
+        height: 450,
+        'max-width': 600,
+        'min-width': 200
+
+      @authWindow.loadUrl "file://#{__dirname}/../html/authenticate.html"
+      @authWindow.on 'close', => @authWindow = null
 
 # This method will be called when Electron has finished
 # initialization and is ready to create browser windows.
 app.on 'ready', ->
-  if false
-    mainWindow = new BrowserWindow(width: 300, height: 750)
-    mainWindow.loadUrl "file://#{__dirname}/../html/main.html"
-  else
-    mainWindow = new BrowserWindow(width: 300, height: 450)
-    mainWindow.loadUrl "file://#{__dirname}/../html/authenticate.html"
+  messenger = new Messenger
 
-  # require('node-notifier').notify(
-  #   title: 'My notification'
-  #   message: 'Hello, there!'
-  #   sound: true
-  # )
-
-  # Emitted when the window is closed.
-  mainWindow.on 'closed', ->
-    # Dereference the window object, usually you would store windows
-    # in an array if your app supports multi windows, this is the time
-    # when you should delete the corresponding element.
-    mainWindow = null
+  setInterval messenger.checkIdleTime, 5000

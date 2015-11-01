@@ -1,44 +1,34 @@
-http = require 'http'
-keytar = require 'keytar'
+ipc = require 'ipc'
 
-storedUsername = keytar
-storedPassword = keytar.getPassword('serviceName', 'username')
+contentArea = document.getElementById('content')
+userList = []
+statuses = {}
 
-# if we have stored credentials
-#   if we can log in with them
-#     open the main window
-#   else
-#     prompt for new credentials
-# else
-#   prompt for new credentials
+# TODO: Preserve selected users
+refreshUserList = ->
+  contentArea.innerHTML = (renderRole role for role in userList).join('')
 
-promptForCredentials = ->
+renderRole = (role) ->
+  users = (renderUserItem user for user in role.users).join('')
 
-# options =
-#   protocol: 'https'
-#   hostname: 'valenciamgmt.net'
-#   port: 443
-#   path: '/api/v1/authenticate',
-#   method: 'POST'
-#   headers:
-#     'Content-Type': 'application/json'
-#
-# req = http.request options, (res) ->
-#   console.log "Status: #{res.statusCode}"
-#   console.log "Headers: #{JSON.stringify(res.headers)}"
-#   res.setEncoding 'utf8'
-#   res.on 'data', (body) ->
-#     console.log 'Body: ' + body
-#
-# req.on 'error', (e) ->
-#   console.log('problem with request: ' + e.message)
-#
-# # write data to request body
-# # req.write('{"string": result}');  ///RESULT HERE IS A JSON
-#
-# username = 'shoffman'
-# password = 'incorrect'
-#
-# req.write JSON.stringify({ username: username, password: password })
-#
-# req.end()
+  """
+  <div class="group">#{role.title}</div>
+  <div class="users-list">#{users}</div>
+  """
+
+renderUserItem = (user) ->
+  status = statuses[user.id] ? 'unknown'
+
+  """
+  <span class="#{status}">
+    #{user.username}
+  </span>
+  """
+
+ipc.on 'users.list', (newUserList) ->
+  userList = newUserList
+  refreshUserList()
+
+ipc.on 'users.statuses', (newStatuses) ->
+  statuses = newStatuses
+  refreshUserList()

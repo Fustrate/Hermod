@@ -1,5 +1,25 @@
 request = require 'request'
 keytar = require 'keytar'
+ipc = require 'ipc'
+
+validationSucceeded = (data) ->
+  keytar.addPassword 'valenciamgmt.net', 'authToken', data.token
+  ipc.sendSync('authenticated')
+
+validationFailed = (error) ->
+  console.log error
+  document.getElementById('perform-authentication').value = 'Authenticate'
+
+validateCredentials = (username, password) ->
+  request.post
+    headers:
+      'Content-Type': 'application/json'
+    url: 'http://panel.dev/api/v1/authenticate'
+    body: JSON.stringify({ username: username, password: password })
+    (error, response, body) ->
+      return validationFailed(error) if error
+
+      validationSucceeded JSON.parse body
 
 document.getElementById('authentication-form').onsubmit = ->
   document.getElementById('perform-authentication').value = 'Authenticating...'
@@ -7,25 +27,6 @@ document.getElementById('authentication-form').onsubmit = ->
   username = document.getElementById('username').value
   password = document.getElementById('password').value
 
-  validateCredentials username, password, validationSucceeded, validationFailed
+  validateCredentials username, password
 
   false
-
-validationSucceeded = (data) ->
-  console.log 'yay!'
-  console.log data
-validationFailed = (error) ->
-  console.log 'oh no :('
-  console.log error
-  document.getElementById('perform-authentication').value = 'Authenticate'
-
-validateCredentials = (username, password, callback, errback) ->
-  request.post
-    headers:
-      'Content-Type': 'application/json'
-    url: 'http://panel.dev/api/v1/authenticate'
-    body: JSON.stringify({ username: username, password: password })
-    (error, response, body) ->
-      return errback(error) if error
-
-      callback JSON.parse body

@@ -1,0 +1,82 @@
+.group
+  padding: 4px 6px
+  background: #cedefb
+  color: #264e94
+  text-shadow: 0 1px 1px #fff
+  clear: both
+
+.users-list
+  clear: both
+  span
+    display: block
+    margin: 2px
+    padding: 6px
+    cursor: pointer
+    box-sizing: border-box
+    float: left
+
+    &.selected
+      background: #ebfffd
+      border: 1px solid #6cc2cd
+
+    &:before
+      display: inline-block
+      font: normal normal normal 14px/1 FontAwesome
+      font-size: inherit
+      text-rendering: auto
+      -webkit-font-smoothing: antialiased
+      -moz-osx-font-smoothing: grayscale
+      width: 1.28571429em
+      text-align: center
+      content: "\f007"
+
+    &.online
+      color: #68a441
+    &.offline
+      color: #959595
+    &.idle
+      color: #c69519
+    &.busy
+      color: #a83434
+
+#content
+  top: 0
+  bottom: 32px
+  left: 0
+  right: 0
+  position: fixed
+  overflow: scroll
+
+#footer-bar
+  position: fixed
+  bottom: 0
+  left: 0
+  right: 0
+  height: 32px
+  line-height: 32px
+  padding: 0 8px
+  background: #666
+  border-top: 1px solid #444
+  color: #eaeaea
+  font-size: 0.8rem
+
+#change-status
+  cursor: pointer
+
+#connection-status
+  float: right
+
+// Max width is 600
+@media (min-width: 600px)
+  .users-list span
+    width: calc(25% - 4px)
+@media (min-width: 450px) and (max-width: 599px)
+  .users-list span
+    width: calc(33.3333% - 4px)
+@media (min-width: 300px) and (max-width: 449px)
+  .users-list span
+    width: calc(50% - 4px)
+@media (max-width: 299px)
+  .users-list span
+    width: calc(100% - 4px)
+    padding: 4px 6px
