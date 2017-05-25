@@ -1,5 +1,5 @@
 {
-  "name": "vmg-messenger",
+  "name": "Hermod",
   "version": "0.0.1",
   "main": "./dist/js/index.js",
   "scripts": {
@@ -11,13 +11,17 @@
     "compile:fonts": "mkdir -p dist/fonts; cp -R src/fonts dist"
   },
   "dependencies": {
-    "@paulcbetts/system-idle-time": "./lib/node-system-idle-time",
-    "keytar": "^3.0.0",
-    "node-notifier": "^4.3.1",
-    "request": "^2.65.0",
-    "websocket": "^1.0.22"
+    "keytar": "^4.0.3",
+    "node-notifier": "^4.6.1",
+    "request": "^2.81.0",
+    "websocket": "^1.0.24",
+    "@paulcbetts/system-idle-time": "^1.0.4"
   },
-  "repository": "",
+  "devDependencies": {
+    "coffeescript": "^1.12.6",
+    "electron": "^1.6.8"
+  },
+  "repository": "https://github.com/ValenciaMgmt/Hermod",
   "license": "UNLICENSED",
   "private": true
 }

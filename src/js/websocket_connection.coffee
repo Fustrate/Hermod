@@ -2,7 +2,7 @@ WebSocketClient = require('websocket').client
 WebSocketConnection = require('websocket').connection
 
 class WebsocketConnection
-  constructor: (@token) ->
+  constructor: (@token, @debug = false) ->
     @client = new WebSocketClient()
     @queue = []
     @eventListeners = {}
@@ -41,7 +41,7 @@ class WebsocketConnection
     @eventListeners[name].push callback
 
   isOpen: =>
-    @connection && @connection.state == 'open'
+    @connection and @connection.state is 'open'
 
   send: (name, data = null) =>
     @sendRaw JSON.stringify([name, data])
@@ -61,10 +61,20 @@ class WebsocketConnection
 
     if callbacks
       callback data for callback in callbacks
+      # console.log 'handled event', name, data if @debug
     else
       console.log 'unhandled event', name, data
 
-  connect: ->
-    @client.connect('wss://valenciamgmt.net/messenger/?version=2.0.0-alpha')
+  connect: =>
+    @client.connect "#{@websocketUrl()}?version=2.0.0-alpha"
+
+  disconnect: (reason) =>
+    @connection?.close(reason ? WebSocketConnection.CLOSE_REASON_NORMAL)
+
+  websocketUrl: =>
+    if @debug
+      'ws://0.0.0.0:9292/'
+    else
+      'wss://valenciamgmt.net/messenger/'
 
 module.exports = WebsocketConnection

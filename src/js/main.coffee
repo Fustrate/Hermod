@@ -1,4 +1,4 @@
-ipc = require 'ipc'
+{ipcMain} = require 'electron'
 
 String.prototype.toTitleCase = ->
   @replace /\w\S*/g, (txt) ->
@@ -10,18 +10,18 @@ class MainWindow
   statuses: {}
 
   constructor: ->
-    @contentArea = document.getElementById('content')
-    @connectionIndicator = document.getElementById('connection-indicator')
-    @statusIndicator = document.getElementById('status-indicator')
+    @contentArea = document.getElementById 'content'
+    @connectionIndicator = document.getElementById 'connection-indicator'
+    @statusIndicator = document.getElementById 'status-indicator'
 
-    ipc.on 'users.list', (@userList) =>
+    ipcMain.on 'users.list', (@userList) =>
       @refreshUserList()
 
-    ipc.on 'users.statuses', (@statuses) =>
+    ipcMain.on 'users.statuses', (@statuses) =>
       @refreshUserList()
 
-    ipc.on 'setDisplayedStatus', @setDisplayedStatus
-    ipc.on 'setConnectionStatus', @setConnectionStatus
+    ipcMain.on 'setDisplayedStatus', @setDisplayedStatus
+    ipcMain.on 'setConnectionStatus', @setConnectionStatus
 
   # TODO: Preserve selected users
   refreshUserList: =>
@@ -36,7 +36,7 @@ class MainWindow
     """
 
   renderUserItem: (user) =>
-    status = @statuses[user.id] ? 'unknown'
+    status = @statuses[user.id] ? 'offline'
 
     """
     <span class="#{status}">

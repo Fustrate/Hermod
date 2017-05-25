@@ -1,1 +1,0 @@
-cmd_Release/system_idle_time.node := c++ -bundle -framework CoreFoundation -framework IOKit -undefined dynamic_lookup -Wl,-search_paths_first -mmacosx-version-min=10.5 -arch x86_64 -L./Release  -o Release/system_idle_time.node Release/obj.target/system_idle_time/src/module.o Release/obj.target/system_idle_time/src/mac/idle.o 

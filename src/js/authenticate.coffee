@@ -1,10 +1,10 @@
 request = require 'request'
 keytar = require 'keytar'
-ipc = require 'ipc'
+{ipcMain} = require 'electron'
 
 validationSucceeded = (data) ->
   keytar.addPassword 'valenciamgmt.net', 'authToken', data.token
-  ipc.sendSync('authenticated')
+  ipcMain.sendSync('authenticated')
 
 validationFailed = (error) ->
   console.log error
