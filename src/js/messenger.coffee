@@ -8,7 +8,7 @@ WebsocketConnection = require './websocket_connection'
 
 class Messenger
   @IDLE_TIME: 10 * 60 * 1000
-  @DEBUG: false
+  @DEBUG: true
 
   mainWindow: null
   authWindow: null
@@ -24,16 +24,11 @@ class Messenger
   constructor: ->
     setInterval @checkIdleTime, 1000
 
-    storedToken = keytar.getPassword 'valenciamgmt.net', 'authToken'
-
-    if storedToken
-      @openMainWindow()
-
-      setTimeout =>
-        @startWebsocketConnection storedToken
-      , 250
-    else
-      @openAuthWindow()
+    keytar.getPassword('valenciamgmt.net', 'authToken').then (@authToken) =>
+      if @authToken
+        @openMainWindow()
+      else
+        @openAuthWindow()
 
     electron.powerMonitor
       .on 'sleep', @disconnectWebsocket
@@ -46,11 +41,11 @@ class Messenger
 
     @websocket.connect()
 
-  startWebsocketConnection: (storedToken) =>
-    @websocket = new WebsocketConnection storedToken
+  startWebsocketConnection: =>
+    @websocket = new WebsocketConnection @authToken, @constructor.DEBUG
 
-    @websocket.on 'users.list',               @updateUserList
-    @websocket.on 'users.statuses',           @updateStatuses
+    @websocket.on 'employees.list',           @updateUserList
+    @websocket.on 'employees.statuses',       @updateStatuses
     @websocket.on 'connection.authenticated', @connectionAuthenticated
     @websocket.on 'unread_count',             @updateUnreadCount
     @websocket.on 'new_message',              @showConversation
@@ -70,7 +65,7 @@ class Messenger
   messageSent: ->
 
   updateUserList: (@userList) =>
-    @mainWindow.webContents.send 'users.list', @userList
+    @mainWindow.webContents.send 'employees_list', @userList
 
   connectionAuthenticated: (user_info) =>
     @id = user_info.id
@@ -80,7 +75,7 @@ class Messenger
       font_color: user_info.font_color
 
   updateStatuses: (@userStatuses) =>
-    @mainWindow.webContents.send 'users.statuses', @userStatuses
+    @mainWindow.webContents.send 'employees_statuses', @userStatuses
     @mainWindow.webContents.send 'setDisplayedStatus', @userStatuses[@id]
 
   updateUnreadCount: (count) =>
@@ -126,6 +121,8 @@ class Messenger
 
     @mainWindow.loadURL "file://#{__dirname}/../html/main.html"
     @mainWindow.focus()
+
+    setTimeout @startWebsocketConnection, 1000
 
   openAuthWindow: =>
     @authWindow ?= new BrowserWindow

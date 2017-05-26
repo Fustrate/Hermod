@@ -19,7 +19,8 @@
   },
   "devDependencies": {
     "coffeescript": "^1.12.6",
-    "electron": "^1.6.8"
+    "electron": "^1.6.10",
+    "electron-rebuild": "^1.5.11"
   },
   "repository": "https://github.com/ValenciaMgmt/Hermod",
   "license": "UNLICENSED",

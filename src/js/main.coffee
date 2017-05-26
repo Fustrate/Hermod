@@ -1,4 +1,4 @@
-{ipcMain} = require 'electron'
+{ipcRenderer} = require 'electron'
 
 String.prototype.toTitleCase = ->
   @replace /\w\S*/g, (txt) ->
@@ -14,21 +14,21 @@ class MainWindow
     @connectionIndicator = document.getElementById 'connection-indicator'
     @statusIndicator = document.getElementById 'status-indicator'
 
-    ipcMain.on 'users.list', (@userList) =>
+    ipcRenderer.on 'employees_list', (event, @userList) =>
       @refreshUserList()
 
-    ipcMain.on 'users.statuses', (@statuses) =>
+    ipcRenderer.on 'employees_statuses', (event, @statuses) =>
       @refreshUserList()
 
-    ipcMain.on 'setDisplayedStatus', @setDisplayedStatus
-    ipcMain.on 'setConnectionStatus', @setConnectionStatus
+    ipcRenderer.on 'setDisplayedStatus', @setDisplayedStatus
+    ipcRenderer.on 'setConnectionStatus', @setConnectionStatus
 
   # TODO: Preserve selected users
   refreshUserList: =>
     @contentArea.innerHTML = (@renderRole role for role in @userList).join('')
 
   renderRole: (role) =>
-    users = (@renderUserItem user for user in role.users).join('')
+    users = (@renderUserItem user for user in role.employees).join('')
 
     """
     <div class="group">#{role.title}</div>
@@ -44,11 +44,11 @@ class MainWindow
     </span>
     """
 
-  setConnectionStatus: (@connectionStatus) =>
+  setConnectionStatus: (event, @connectionStatus) =>
     @connectionIndicator.innerText = @connectionStatus.toTitleCase()
     @connectionIndicator.className = @connectionStatus.toLowerCase()
 
-  setDisplayedStatus: (@displayedStatus) =>
+  setDisplayedStatus: (event, @displayedStatus) =>
     @statusIndicator.innerText = @displayedStatus.toTitleCase()
     @statusIndicator.className = @displayedStatus.toLowerCase()
 

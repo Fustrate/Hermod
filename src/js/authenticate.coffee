@@ -14,7 +14,7 @@ validateCredentials = (username, password) ->
   request.post
     headers:
       'Content-Type': 'application/json'
-    url: 'http://panel.dev/api/v1/authenticate'
+    url: 'http://asgard.dev/api/v1/authenticate'
     body: JSON.stringify({ username: username, password: password })
     (error, response, body) ->
       return validationFailed(error) if error

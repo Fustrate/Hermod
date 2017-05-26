@@ -1,4 +1,4 @@
-{app, BrowserWindow, ipcMain, crashReporter} = require('electron')
+{app, ipcMain} = require('electron')
 Messenger = require './messenger'
 
 # Report crashes to our server.
