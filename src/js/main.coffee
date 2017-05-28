@@ -1,4 +1,6 @@
-{ ipcRenderer } = require 'electron'
+{ remote, ipcRenderer } = require 'electron'
+
+localShortcut = remote.require('electron-localshortcut')
 
 String.prototype.toTitleCase = ->
   @replace /\w\S*/g, (txt) ->
@@ -22,6 +24,9 @@ class MainWindow
 
     ipcRenderer.on 'setDisplayedStatus', @setDisplayedStatus
     ipcRenderer.on 'setConnectionStatus', @setConnectionStatus
+
+    localShortcut.register @window, 'Alt+A', @selectAll
+    localShortcut.register @window, 'Alt+D', @deselectAll
 
   # TODO: Preserve selected users
   refreshUserList: =>
@@ -82,6 +87,14 @@ class MainWindow
   setDisplayedStatus: (event, @displayedStatus) =>
     @statusIndicator.innerText = @displayedStatus.toTitleCase()
     @statusIndicator.className = @displayedStatus.toLowerCase()
+
+  selectAll: ->
+    for user in document.getElementsByClassName('user')
+      user.classList.toggle 'selected', true
+
+  deselectAll: ->
+    for user in document.getElementsByClassName('user')
+      user.classList.toggle 'selected', false
 
   clickedUser: (event) ->
     event.target.classList.toggle 'selected'
