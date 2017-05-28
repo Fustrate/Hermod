@@ -86,7 +86,7 @@ class Messenger
     unless @messageWindows[conversation.id]
       @messageWindows[conversation.id] = new BrowserWindow
         width: 600
-        height: 500
+        height: 600
         'min-width': 200
         show: false
 
