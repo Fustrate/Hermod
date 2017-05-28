@@ -1,4 +1,4 @@
-{app, ipcMain} = require('electron')
+{ app, ipcMain } = require('electron')
 Messenger = require './messenger'
 
 # Report crashes to our server.
@@ -9,7 +9,7 @@ Messenger = require './messenger'
 #   uploadToServer: true
 # )
 
-ipcMain.on 'debug', (event, args)->
+ipcMain.on 'debug', (event, args) ->
   console.log args
 
 app.on 'ready', ->

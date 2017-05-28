@@ -1,5 +1,5 @@
 electron = require('electron')
-{app, BrowserWindow} = electron
+{ app, BrowserWindow } = electron
 
 idle = require '@paulcbetts/system-idle-time'
 keytar = require 'keytar'
@@ -108,7 +108,7 @@ class Messenger
       if @idle
         @websocket.send 'user.status', @status
         @idle = false
-    else if !@idle
+    else if not @idle
       @idle = true
       @websocket.send 'user.status', 'idle'
 

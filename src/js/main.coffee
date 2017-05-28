@@ -1,4 +1,4 @@
-{ipcRenderer} = require 'electron'
+{ ipcRenderer } = require 'electron'
 
 String.prototype.toTitleCase = ->
   @replace /\w\S*/g, (txt) ->

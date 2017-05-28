@@ -1,6 +1,6 @@
 request = require 'request'
 keytar = require 'keytar'
-{ipcMain} = require 'electron'
+{ ipcMain } = require 'electron'
 
 validationSucceeded = (data) ->
   keytar.addPassword 'valenciamgmt.net', 'authToken', data.token
