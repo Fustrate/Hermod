@@ -1,0 +1,49 @@
+#tabs
+  background-image: linear-gradient(0deg, #444, #666)
+  border-bottom: 1px solid #222
+  color: #eaeaea
+  font-size: 0.8rem
+  height: 50px
+  left: 0
+  line-height: 50px
+  padding: 0
+  position: fixed
+  right: 0
+  text-shadow: 0 1px 1px black
+  top: 0
+
+  span
+    border-left: 0px solid #444
+    border-right: 0px solid #666
+    cursor: pointer
+    display: inline-block
+    float: left
+    text-align: center
+    width: 50%
+
+    &.active
+      background-image: linear-gradient(0deg, #333, #555)
+      border-left-color: #333
+      border-right-color: #555
+
+    &::after
+      -moz-osx-font-smoothing: grayscale
+      -webkit-font-smoothing: antialiased
+      font-size: inherit
+      font: normal normal normal 30px/1 FontAwesome
+      text-rendering: auto
+      vertical-align: middle
+
+    &:not(:first-child)
+      border-left-width: 1px
+
+    &:not(:last-child)
+      border-right-width: 1px
+
+#tab-users
+  &::after
+    content: '\f0c0'
+
+#tab-messages
+  &::after
+    content: '\f0e0'

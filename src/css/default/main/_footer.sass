@@ -1,0 +1,41 @@
+#footer-bar
+  background-image: linear-gradient(0deg, #444, #666)
+  border-top: 1px solid #222
+  bottom: 0
+  color: #eaeaea
+  font-size: 0.8rem
+  height: 32px
+  left: 0
+  line-height: 32px
+  padding: 0 8px
+  position: fixed
+  right: 0
+  text-shadow: 0 1px 1px black
+
+#status-indicator
+  cursor: pointer
+
+  &.online
+    color: scale-color($online, $lightness: 25%)
+    font-weight: bold
+
+  &.idle
+    color: scale-color($idle, $lightness: 25%)
+    font-style: italic
+
+  &.busy
+    color: scale-color($busy, $lightness: 35%)
+    font-weight: bold
+
+#connection-indicator
+  float: right
+
+  &:before
+    -moz-osx-font-smoothing: grayscale
+    -webkit-font-smoothing: antialiased
+    content: "\f1e6"
+    display: inline-block
+    font-size: inherit
+    font: normal normal normal 14px/1 FontAwesome
+    padding-right: 4px
+    text-rendering: auto

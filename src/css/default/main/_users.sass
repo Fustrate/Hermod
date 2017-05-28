@@ -1,0 +1,72 @@
+$group-color: #265f94
+$selected-color: #4eadb9
+
+.group
+  border-bottom: 1px solid $group-color
+  clear: both
+  color: $group-color
+  cursor: pointer
+  margin: 0 1px
+  padding: 2px 8px
+  font-size: 1.2rem
+
+.users-list
+  clear: both
+  font-size: 1rem
+
+  span
+    box-sizing: border-box
+    cursor: pointer
+    display: block
+    float: left
+    margin: 2px
+    padding: 6px
+
+    &.selected
+      background: scale-color($selected-color, $lightness: 70%)
+      box-shadow: 0 0 1px $selected-color
+
+    &:before
+      -moz-osx-font-smoothing: grayscale
+      -webkit-font-smoothing: antialiased
+      content: "\f007"
+      display: inline-block
+      font-size: inherit
+      font: normal normal normal 14px/1 FontAwesome
+      text-align: center
+      text-rendering: auto
+      width: 1.28571429em
+
+    &.online
+      color: $online
+      font-weight: bold
+
+    &.offline
+      color: $offline
+
+    &.idle
+      color: $idle
+
+    &.busy
+      color: $busy
+
+// Max width is 600
+@media (min-width: 600px)
+  .users-list span
+    width: calc(25% - 4px)
+
+@media (min-width: 450px) and (max-width: 599px)
+  .users-list span
+    width: calc(33.3333% - 4px)
+
+@media (min-width: 300px) and (max-width: 449px)
+  .users-list span
+    width: calc(50% - 4px)
+
+@media (max-width: 299px)
+  .users-list span
+    width: calc(100% - 4px)
+    padding: 4px 6px
+
+  .group
+    text-align: center

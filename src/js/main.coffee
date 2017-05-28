@@ -12,9 +12,14 @@ class MainWindow
   statuses: {}
 
   constructor: ->
-    @contentArea = document.getElementById 'content'
     @connectionIndicator = document.getElementById 'connection-indicator'
     @statusIndicator = document.getElementById 'status-indicator'
+
+    @usersTab = document.getElementById 'tab-users'
+    @messagesTab = document.getElementById 'tab-messages'
+
+    @usersContent = document.getElementById 'content-users'
+    @messagesContent = document.getElementById 'content-messages'
 
     ipcRenderer.on 'employees_list', (event, @userList) =>
       @refreshUserList()
@@ -25,15 +30,32 @@ class MainWindow
     ipcRenderer.on 'setDisplayedStatus', @setDisplayedStatus
     ipcRenderer.on 'setConnectionStatus', @setConnectionStatus
 
+    @addEventListeners()
+
     localShortcut.register @window, 'Alt+A', @selectAll
     localShortcut.register @window, 'Alt+D', @deselectAll
+
+  addEventListeners: =>
+    @usersTab.addEventListener 'click', =>
+      @usersTab.classList.toggle 'active', true
+      @messagesTab.classList.toggle 'active', false
+
+      @usersContent.classList.toggle 'active', true
+      @messagesContent.classList.toggle 'active', false
+
+    @messagesTab.addEventListener 'click', =>
+      @usersTab.classList.toggle 'active', false
+      @messagesTab.classList.toggle 'active', true
+
+      @usersContent.classList.toggle 'active', false
+      @messagesContent.classList.toggle 'active', true
 
   # TODO: Preserve selected users
   refreshUserList: =>
     for role in @userList
       [group, users] = @renderRole role
-      @contentArea.appendChild group
-      @contentArea.appendChild users
+      @usersContent.appendChild group
+      @usersContent.appendChild users
 
   refreshUserStatuses: =>
     # Don't try to change statuses when the app first starts
