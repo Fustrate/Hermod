@@ -80,7 +80,7 @@ class MainWindow
 
   doNothing: ->
 
-  # TODO: Preserve selected users
+  # TODO: Preserve selected users if a user is added or removed
   refreshUserList: =>
     for role in @userList
       [group, users] = @renderRole role
@@ -88,9 +88,6 @@ class MainWindow
       @usersContent.appendChild users
 
   refreshUserStatuses: =>
-    # Don't try to change statuses when the app first starts
-    return unless @userList
-
     for role in @userList
       for user in role.employees
         element = document.getElementById("user_#{user.id}")
@@ -98,7 +95,7 @@ class MainWindow
         classes = [@statuses[user.id] ? 'offline']
         classes.push 'selected' if element.classList.contains 'selected'
 
-        # Let's not worry about toggling so many classes
+        # Let's not worry about toggling so many potential classes
         element.className = classes.join(' ')
 
   renderRole: (role) =>
