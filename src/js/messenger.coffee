@@ -86,8 +86,8 @@ class Messenger
     unless @messageWindows[conversation.id]
       @messageWindows[conversation.id] = new BrowserWindow
         width: 600
-        height: 600
-        'min-width': 200
+        height: 720
+        minWidth: 200
         show: false
 
       @messageWindows[conversation.id]
@@ -115,9 +115,9 @@ class Messenger
   openMainWindow: =>
     @mainWindow ?= new BrowserWindow
       width: 600
-      height: 500
-      'max-width': 600
-      'min-width': 200
+      height: 600
+      maxWidth: 600
+      minWidth: 200
 
     @mainWindow.loadURL "file://#{__dirname}/../html/main.html"
     @mainWindow.focus()
@@ -128,8 +128,8 @@ class Messenger
     @authWindow ?= new BrowserWindow
       width: 300
       height: 450
-      'max-width': 600
-      'min-width': 200
+      maxWidth: 600
+      minWidth: 200
 
     @authWindow.loadURL "file://#{__dirname}/../html/authenticate.html"
     @authWindow.on 'close', => @authWindow = null

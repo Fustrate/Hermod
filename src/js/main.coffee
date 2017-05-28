@@ -49,7 +49,7 @@ class MainWindow
       if a.username < b.username then -1 else 1
 
     group = document.createElement('div')
-    group.className = 'group'
+    group.classList.add 'group'
     group.appendChild document.createTextNode(role.title)
     group.addEventListener 'click', @clickedGroup
     group.addEventListener 'dblclick', @dblClickedGroup
@@ -67,7 +67,7 @@ class MainWindow
 
     element = document.createElement 'span'
     element.setAttribute('id', "user_#{user.id}")
-    element.className = status
+    element.classList.add 'user', status
     element.appendChild document.createTextNode(user.username)
 
     element.addEventListener 'click', @clickedUser

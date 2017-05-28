@@ -11,11 +11,11 @@
     "compile:fonts": "mkdir -p dist/fonts; cp -R src/fonts dist"
   },
   "dependencies": {
+    "@paulcbetts/system-idle-time": "^1.0.4",
     "keytar": "^4.0.3",
     "node-notifier": "^4.6.1",
     "request": "^2.81.0",
-    "websocket": "^1.0.24",
-    "@paulcbetts/system-idle-time": "^1.0.4"
+    "websocket": "^1.0.24"
   },
   "devDependencies": {
     "coffeescript": "^1.12.6",
