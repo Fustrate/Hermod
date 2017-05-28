@@ -1,4 +1,5 @@
 { remote, ipcRenderer } = require 'electron'
+{ Menu, MenuItem } = remote
 
 localShortcut = remote.require('electron-localshortcut')
 
@@ -12,6 +13,8 @@ class MainWindow
   statuses: {}
 
   constructor: ->
+    @window = remote.getCurrentWindow()
+
     @connectionIndicator = document.getElementById 'connection-indicator'
     @statusIndicator = document.getElementById 'status-indicator'
 
@@ -29,6 +32,8 @@ class MainWindow
 
     ipcRenderer.on 'setDisplayedStatus', @setDisplayedStatus
     ipcRenderer.on 'setConnectionStatus', @setConnectionStatus
+
+    @addMenus()
 
     @addEventListeners()
 
@@ -49,6 +54,28 @@ class MainWindow
 
       @usersContent.classList.toggle 'active', false
       @messagesContent.classList.toggle 'active', true
+
+  addMenus: =>
+    @statusMenu = new Menu
+
+    @statusMenu.append new MenuItem(label: 'Online', click: @doNothing)
+    @statusMenu.append new MenuItem(label: 'Do Not Disturb', click: @doNothing)
+    @statusMenu.append new MenuItem(label: 'Out of Office', click: @doNothing)
+
+    @statusIndicator.addEventListener 'click', @openStatusMenu, false
+    @statusIndicator.addEventListener 'contextmenu', @openStatusMenu, false
+
+  openStatusMenu: (e) =>
+    e.preventDefault()
+
+    displayed = @displayedStatus.toLowerCase()
+
+    for item in @statusMenu.items
+      item.visible = item.label.toLowerCase() isnt displayed
+
+    @statusMenu.popup remote.getCurrentWindow()
+
+  doNothing: ->
 
   # TODO: Preserve selected users
   refreshUserList: =>
