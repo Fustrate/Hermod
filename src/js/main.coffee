@@ -37,23 +37,26 @@ class MainWindow
 
     @addEventListeners()
 
+  addEventListeners: =>
+    @usersTab.addEventListener 'click', @openUsersTab
+    @messagesTab.addEventListener 'click', @openMessagesTab
+
     localShortcut.register @window, 'Alt+A', @selectAll
     localShortcut.register @window, 'Alt+D', @deselectAll
 
-  addEventListeners: =>
-    @usersTab.addEventListener 'click', =>
-      @usersTab.classList.toggle 'active', true
-      @messagesTab.classList.toggle 'active', false
+  openUsersTab: =>
+    @usersTab.classList.toggle 'active', true
+    @messagesTab.classList.toggle 'active', false
 
-      @usersContent.classList.toggle 'active', true
-      @messagesContent.classList.toggle 'active', false
+    @usersContent.classList.toggle 'active', true
+    @messagesContent.classList.toggle 'active', false
 
-    @messagesTab.addEventListener 'click', =>
-      @usersTab.classList.toggle 'active', false
-      @messagesTab.classList.toggle 'active', true
+  openMessagesTab: =>
+    @usersTab.classList.toggle 'active', false
+    @messagesTab.classList.toggle 'active', true
 
-      @usersContent.classList.toggle 'active', false
-      @messagesContent.classList.toggle 'active', true
+    @usersContent.classList.toggle 'active', false
+    @messagesContent.classList.toggle 'active', true
 
   addMenus: =>
     @statusMenu = new Menu
