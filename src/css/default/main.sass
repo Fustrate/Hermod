@@ -3,18 +3,24 @@ $offline: #959595
 $idle: #c69519
 $busy: #a83434
 
+$group-color: #265f94
+$selected-color: #4eadb9
+
 .group
-  background: #cedefb
+  border-bottom: 1px solid $group-color
   clear: both
-  color: #264e94
-  padding: 4px 6px
-  text-shadow: 0 1px 1px #fff
+  color: $group-color
+  cursor: pointer
+  margin: 0 1px
+  padding: 2px 8px
+  font-size: 1.2rem
 
 ::selection
   background: none
 
 .users-list
   clear: both
+  font-size: 1.1rem
 
   span
     box-sizing: border-box
@@ -25,8 +31,8 @@ $busy: #a83434
     padding: 6px
 
     &.selected
-      background: #ebfffd
-      border: 1px solid #6cc2cd
+      background: scale-color($selected-color, $lightness: 70%)
+      box-shadow: 0 0 1px $selected-color
 
     &:before
       -moz-osx-font-smoothing: grayscale
@@ -61,9 +67,8 @@ $busy: #a83434
   top: 0
 
 #footer-bar
-  background-image: -webkit-linear-gradient(top, #666, #444)
-  background: #666
-  border-top: 1px solid #333
+  background-image: linear-gradient(0deg, #444, #666)
+  border-top: 1px solid #222
   bottom: 0
   color: #eaeaea
   font-size: 0.8rem
