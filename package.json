@@ -8,7 +8,9 @@
     "compile:js": "coffee --compile --output dist/js src/js",
     "compile:css": "sass -Cq --update src/css:dist/css --sourcemap=none",
     "compile:html": "mkdir -p dist/html; cp -R src/html dist",
-    "compile:fonts": "mkdir -p dist/fonts; cp -R src/fonts dist"
+    "compile:fonts": "mkdir -p dist/fonts; cp -R src/fonts dist",
+    "pack": "build --dir",
+    "dist": "build"
   },
   "dependencies": {
     "@paulcbetts/system-idle-time": "^1.0.4",
@@ -20,7 +22,12 @@
   "devDependencies": {
     "coffeescript": "^1.12.6",
     "electron": "^1.6.10",
+    "electron-builder": "^18.1.0",
     "electron-rebuild": "^1.5.11"
+  },
+  "build": {
+    "appId": "com.valenciamgmt.hermod",
+    "productName": "VMG Messenger"
   },
   "repository": "https://github.com/ValenciaMgmt/Hermod",
   "license": "UNLICENSED",
