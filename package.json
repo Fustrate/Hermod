@@ -9,6 +9,7 @@
     "compile:css": "sass -Cq --update src/css:dist/css --sourcemap=none",
     "compile:html": "mkdir -p dist/html; cp -R src/html dist",
     "compile:fonts": "mkdir -p dist/fonts; cp -R src/fonts dist",
+    "packages:rebuild": "electron-rebuild",
     "pack": "build --dir",
     "dist": "build"
   },
