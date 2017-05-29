@@ -9,7 +9,7 @@ String.prototype.toTitleCase = ->
 
 class MainWindow
   displayedStatus: 'Offline'
-  userList: []
+  users: []
   statuses: {}
 
   constructor: ->
@@ -24,25 +24,27 @@ class MainWindow
     @usersContent = document.getElementById 'content-users'
     @messagesContent = document.getElementById 'content-messages'
 
-    ipcRenderer.on 'employees_list', (event, @userList) =>
-      @refreshUserList()
-
-    ipcRenderer.on 'employees_statuses', (event, @statuses) =>
-      @refreshUserStatuses()
-
-    ipcRenderer.on 'setDisplayedStatus', @setDisplayedStatus
-    ipcRenderer.on 'setConnectionStatus', @setConnectionStatus
+    @userList = document.getElementById 'user-list'
 
     @addMenus()
-
+    @addIPCListeners()
     @addEventListeners()
+
+  addIPCListeners: =>
+    ipcRenderer.on 'employees_list', @refreshUsers
+    ipcRenderer.on 'employees_statuses', @refreshUserStatuses
+    ipcRenderer.on 'setDisplayedStatus', @setDisplayedStatus
+    ipcRenderer.on 'setConnectionStatus', @setConnectionStatus
 
   addEventListeners: =>
     @usersTab.addEventListener 'click', @openUsersTab
     @messagesTab.addEventListener 'click', @openMessagesTab
 
+    document.getElementById('new-message').addEventListener 'click', @newMessage
+
     localShortcut.register @window, 'Alt+A', @selectAll
     localShortcut.register @window, 'Alt+D', @deselectAll
+    localShortcut.register @window, 'Alt+N', @newMessage
 
   openUsersTab: =>
     @usersTab.classList.toggle 'active', true
@@ -76,19 +78,20 @@ class MainWindow
     for item in @statusMenu.items
       item.visible = item.label.toLowerCase() isnt displayed
 
-    @statusMenu.popup remote.getCurrentWindow()
+    @statusMenu.popup @window
 
-  doNothing: ->
+  doNothing: (e) ->
+    console.log e
 
   # TODO: Preserve selected users if a user is added or removed
-  refreshUserList: =>
-    for role in @userList
+  refreshUsers: (event, @users) =>
+    for role in @users
       [group, users] = @renderRole role
-      @usersContent.appendChild group
-      @usersContent.appendChild users
+      @userList.appendChild group
+      @userList.appendChild users
 
-  refreshUserStatuses: =>
-    for role in @userList
+  refreshUserStatuses: (event, @statuses) =>
+    for role in @users
       for user in role.employees
         element = document.getElementById("user_#{user.id}")
 
@@ -144,6 +147,10 @@ class MainWindow
   deselectAll: ->
     for user in document.getElementsByClassName('user')
       user.classList.toggle 'selected', false
+
+  newMessage: (e) ->
+    e.preventDefault()
+    false
 
   clickedUser: (event) ->
     event.target.classList.toggle 'selected'

@@ -82,6 +82,8 @@ class Messenger
     @unread = parseInt count, 10
     @mainWindow.webContents.send 'unread_count', @unread
 
+    app.setBadgeCount @unread
+
   showConversation: (conversation) ->
     unless @messageWindows[conversation.id]
       @messageWindows[conversation.id] = new BrowserWindow

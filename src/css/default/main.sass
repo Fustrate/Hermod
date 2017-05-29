@@ -10,7 +10,6 @@ $busy: #a83434
 #content
   bottom: 32px
   left: 0
-  overflow: scroll
   position: fixed
   right: 0
   top: 50px
@@ -20,6 +19,64 @@ $busy: #a83434
 
     &.active
       display: block
+
+#content
+  background: #ddd
+
+.scrollable
+  background: white
+  border: 1px solid #ccc
+  bottom: 64px
+  left: 3px
+  padding: 4px
+  position: fixed
+  right: 3px
+  top: 53px
+
+.content-buttons
+  bottom: 35px
+  left: 0
+  position: fixed
+  right: 0
+  text-align: center
+
+button
+  background-image: linear-gradient(to top, #ddd, #eee)
+  border: 1px solid #aaa
+  border-radius: 3px
+  cursor: pointer
+  height: 26px
+  line-height: 26px
+  padding: 0 8px 2px
+  text-shadow: 0 1px 1px white
+
+  &:active,
+  &:focus
+    background-image: linear-gradient(to top, #ccc, #ddd)
+    border: 1px solid #999
+    outline: none
+
+#previous-page,
+#next-page
+  &::before
+    -moz-osx-font-smoothing: grayscale
+    -webkit-font-smoothing: antialiased
+    display: inline-block
+    font-size: inherit
+    font: normal normal normal 14px/1 FontAwesome
+    text-rendering: auto
+
+#previous-page
+  &::before
+    content: "\f053"
+
+#next-page
+  &::before
+    content: "\f054"
+
+#user-list,
+#content-messages
+  overflow: scroll
 
 ::selection
   background: transparent

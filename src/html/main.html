@@ -12,8 +12,21 @@
       <span id="tab-messages"></span>
     </div>
     <div id="content">
-      <div id="content-users" class="active"></div>
-      <div id="content-messages">Messages!</div>
+      <div id="content-users" class="active">
+        <div class="scrollable" id="user-list"></div>
+        <div class="content-buttons">
+          <button id="new-message">New Message</button>
+        </div>
+      </div>
+      <div id="content-messages">
+        <div class="scrollable" id="messages-list">
+          Messages!
+        </div>
+        <div class="content-buttons">
+          <button id="previous-page"></button>
+          <button id="next-page"></button>
+        </div>
+      </div>
     </div>
     <div id="footer-bar">
       <span id="status-indicator">Offline</span>
