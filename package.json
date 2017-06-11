@@ -15,9 +15,9 @@
   },
   "dependencies": {
     "@paulcbetts/system-idle-time": "^1.0.4",
-    "electron-localshortcut": "^1.1.1",
+    "electron-localshortcut": "^2.0.0",
     "keytar": "^4.0.3",
-    "node-notifier": "^4.6.1",
+    "node-notifier": "^5.1.2",
     "request": "^2.81.0",
     "websocket": "^1.0.24"
   },
