@@ -63,7 +63,7 @@ class WebsocketConnection
       callback data for callback in callbacks
       # console.log 'handled event', name, data if @debug
     else
-      console.log 'unhandled event', name, data
+      console.log 'Unhandled', name, data
 
   connect: =>
     @client.connect "#{@websocketUrl()}?version=2.0.0-alpha"

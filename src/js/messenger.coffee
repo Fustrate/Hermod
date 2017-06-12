@@ -16,7 +16,8 @@ class Messenger
   userList: []
   userStatuses: {}
 
-  messageWindows: {}
+  # Windows for each active conversation
+  conversations: {}
 
   # Windows for each new message
   newMessageWindows: {}
@@ -91,31 +92,36 @@ class Messenger
     app.setBadgeCount @unread
 
   showConversation: (conversation) ->
-    unless @messageWindows[conversation.id]
-      @messageWindows[conversation.id] = new BrowserWindow
+    unless @conversations[conversation.id]
+      @conversations[conversation.id] = new BrowserWindow
         width: 600
         height: 720
         minWidth: 200
         show: false
 
-      @messageWindows[conversation.id]
+      @conversations[conversation.id]
         .loadURL "file://#{__dirname}/../html/conversation.html"
-      @messageWindows[conversation.id]
+      @conversations[conversation.id]
         .on 'closed', =>
-          delete @messageWindows[conversation.id]
+          delete @conversations[conversation.id]
+        .on 'focus', =>
+          @conversations[conversation.id].setAlwaysOnTop(false)
+        .once 'ready-to-show', =>
+          @conversations[conversation.id].show()
 
-    @messageWindows[conversation.id].webContents.send 'update', conversation
-    @messageWindows[conversation.id]
-      .show()
+    @conversations[conversation.id].webContents.send 'update', conversation
+    @conversations[conversation.id]
       .flashFrame(true)
+      .setAlwaysOnTop(true)
 
   checkIdleTime: =>
     return unless @websocket
 
     if idle.getIdleTime() < @constructor.IDLE_TIME
-      if @idle
-        @websocket.send 'user.status', @status
-        @idle = false
+      return unless @idle
+
+      @websocket.send 'user.status', @status
+      @idle = false
     else if not @idle
       @idle = true
       @websocket.send 'user.status', 'idle'
@@ -140,7 +146,7 @@ class Messenger
       minWidth: 200
 
     @authWindow.loadURL "file://#{__dirname}/../html/authenticate.html"
-    @authWindow.on 'close', => @authWindow = null
+    @authWindow.on 'close', => delete @authWindow
 
   openMessageWindow: (users) =>
     newMessageWindow = new BrowserWindow
