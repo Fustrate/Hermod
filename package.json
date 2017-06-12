@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "coffeescript": "^1.12.6",
-    "electron": "^1.6.10",
+    "electron": "^1.7.3",
     "electron-builder": "^18.1.0",
     "electron-rebuild": "^1.5.11"
   },
