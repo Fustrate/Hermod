@@ -4,4 +4,4 @@ To install node packages: `npm install`
 
 To start the program: `npm start`
 
-If you get an electron version mismatch: `$(npm bin)/electron-rebuild`
+If you get a `NODE_MODULE_VERSION` mismatch error: `$(npm bin)/electron-rebuild`
