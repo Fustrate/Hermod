@@ -26,6 +26,9 @@ class MainWindow
 
     @userList = document.getElementById 'user-list'
 
+    @buttons =
+      new_message: document.getElementById('new-message')
+
     @addMenus()
     @addIPCListeners()
     @addEventListeners()
@@ -40,7 +43,7 @@ class MainWindow
     @usersTab.addEventListener 'click', @openUsersTab
     @messagesTab.addEventListener 'click', @openMessagesTab
 
-    document.getElementById('new-message').addEventListener 'click', @newMessage
+    @buttons.new_message.addEventListener 'click', @newMessage
 
     localShortcut.register @window, 'Alt+A', @selectAll
     localShortcut.register @window, 'Alt+D', @deselectAll
@@ -157,6 +160,8 @@ class MainWindow
         selectedUsers.push user.user
 
     ipcRenderer.send 'new_message', JSON.stringify(selectedUsers)
+
+    @buttons.new_message.blur()
 
   clickedUser: (event) ->
     event.target.classList.toggle 'selected'
