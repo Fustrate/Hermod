@@ -18,11 +18,13 @@ class MainWindow
     @connectionIndicator = document.getElementById 'connection-indicator'
     @statusIndicator = document.getElementById 'status-indicator'
 
-    @usersTab = document.getElementById 'tab-users'
-    @messagesTab = document.getElementById 'tab-messages'
-
-    @usersContent = document.getElementById 'content-users'
-    @messagesContent = document.getElementById 'content-messages'
+    @tabs =
+      users:
+        button: document.getElementById 'tab-users'
+        content: document.getElementById 'content-users'
+      messages:
+        button: document.getElementById 'tab-messages'
+        content: document.getElementById 'content-messages'
 
     @userList = document.getElementById 'user-list'
 
@@ -40,8 +42,8 @@ class MainWindow
     ipcRenderer.on 'setConnectionStatus', @setConnectionStatus
 
   addEventListeners: =>
-    @usersTab.addEventListener 'click', @openUsersTab
-    @messagesTab.addEventListener 'click', @openMessagesTab
+    @tabs.users.button.addEventListener 'click', @openUsersTab
+    @tabs.messages.button.addEventListener 'click', @openMessagesTab
 
     @buttons.new_message.addEventListener 'click', @newMessage
 
@@ -50,18 +52,18 @@ class MainWindow
     localShortcut.register @window, 'Alt+N', @newMessage
 
   openUsersTab: =>
-    @usersTab.classList.toggle 'active', true
-    @messagesTab.classList.toggle 'active', false
+    @tabs.users.button.classList.toggle 'active', true
+    @tabs.messages.button.classList.toggle 'active', false
 
-    @usersContent.classList.toggle 'active', true
-    @messagesContent.classList.toggle 'active', false
+    @tabs.users.content.classList.toggle 'active', true
+    @tabs.messages.content.classList.toggle 'active', false
 
   openMessagesTab: =>
-    @usersTab.classList.toggle 'active', false
-    @messagesTab.classList.toggle 'active', true
+    @tabs.users.button.classList.toggle 'active', false
+    @tabs.messages.button.classList.toggle 'active', true
 
-    @usersContent.classList.toggle 'active', false
-    @messagesContent.classList.toggle 'active', true
+    @tabs.users.content.classList.toggle 'active', false
+    @tabs.messages.content.classList.toggle 'active', true
 
   addMenus: =>
     @statusMenu = new Menu
