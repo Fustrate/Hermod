@@ -124,6 +124,7 @@ class MainWindow
 
     element = document.createElement 'span'
     element.setAttribute('id', "user_#{user.id}")
+    element.user = user
     element.classList.add 'user', status
     element.appendChild document.createTextNode(user.username)
 
@@ -148,9 +149,14 @@ class MainWindow
     for user in document.getElementsByClassName('user')
       user.classList.toggle 'selected', false
 
-  newMessage: (e) ->
-    e.preventDefault()
-    false
+  newMessage: ->
+    selectedUsers = []
+
+    for user in document.getElementsByClassName('user')
+      if user.classList.contains 'selected'
+        selectedUsers.push user.user
+
+    ipcRenderer.send 'new_message', JSON.stringify(selectedUsers)
 
   clickedUser: (event) ->
     event.target.classList.toggle 'selected'

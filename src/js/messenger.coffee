@@ -1,5 +1,5 @@
 electron = require('electron')
-{ app, BrowserWindow } = electron
+{ app, BrowserWindow, ipcMain } = electron
 
 idle = require '@paulcbetts/system-idle-time'
 keytar = require 'keytar'
@@ -18,6 +18,9 @@ class Messenger
 
   messageWindows: {}
 
+  # Windows for each new message
+  newMessageWindows: {}
+
   status: 'online'
   idle: false
 
@@ -33,6 +36,9 @@ class Messenger
     electron.powerMonitor
       .on 'sleep', @disconnectWebsocket
       .on 'wake', @reconnectWebsocket
+
+    ipcMain.on 'new_message', (event, args...) =>
+      @openMessageWindow(args)
 
   disconnectWebsocket: ->
 
@@ -135,5 +141,23 @@ class Messenger
 
     @authWindow.loadURL "file://#{__dirname}/../html/authenticate.html"
     @authWindow.on 'close', => @authWindow = null
+
+  openMessageWindow: (users) =>
+    newMessageWindow = new BrowserWindow
+      width: 300
+      height: 450
+      maxWidth: 600
+      minWidth: 300
+
+    args = encodeURIComponent users
+
+    newMessageWindow
+      .loadURL "file://#{__dirname}/../html/new_message.html##{args}"
+
+    newMessageWindow
+      .on 'close', =>
+        delete @newMessageWindows[newMessageWindow.id]
+
+    @newMessageWindows[newMessageWindow.id] = newMessageWindow
 
 module.exports = Messenger
