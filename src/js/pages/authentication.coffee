@@ -1,10 +1,10 @@
 request = require 'request'
 keytar = require 'keytar'
-{ ipcMain } = require 'electron'
+{ ipcRenderer } = require 'electron'
 
-validationSucceeded = (data) ->
-  keytar.addPassword 'valenciamgmt.net', 'authToken', data.token
-  ipcMain.sendSync('authenticated')
+validationSucceeded = (token) ->
+  keytar.setPassword 'valenciamgmt.net', 'authToken', token
+  ipcRenderer.send('authenticated')
 
 validationFailed = (error) ->
   console.log error
@@ -19,7 +19,7 @@ validateCredentials = (username, password) ->
     (error, response, body) ->
       return validationFailed(error) if error
 
-      validationSucceeded JSON.parse body
+      validationSucceeded JSON.parse(body).token
 
 document.getElementById('authentication-form').onsubmit = ->
   document.getElementById('perform-authentication').value = 'Authenticating...'

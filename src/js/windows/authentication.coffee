@@ -13,7 +13,7 @@ authentication.init = ->
     maxWidth: 600
     minimizable: false
     minWidth: 200
-    resizable: false
+    # resizable: false
     show: false
     useContentSize: true
     width: 300
