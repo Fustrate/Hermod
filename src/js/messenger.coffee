@@ -11,16 +11,12 @@ class Messenger
   @DEBUG: true
 
   mainWindow: null
-  authWindow: null
   websocket: null
   userList: []
   userStatuses: {}
 
   # Windows for each active conversation
   conversations: {}
-
-  # Windows for each new message
-  newMessageWindows: {}
 
   status: 'online'
   idle: false
@@ -38,8 +34,10 @@ class Messenger
       .on 'sleep', @disconnectWebsocket
       .on 'wake', @reconnectWebsocket
 
-    ipcMain.on 'new_message', (event, args...) =>
-      @openMessageWindow(args)
+    ipcMain.on 'new_message', (event, users) =>
+      @openMessageWindow(users)
+
+    ipcMain.on 'about', @openAboutWindow
 
   disconnectWebsocket: ->
 
@@ -139,31 +137,18 @@ class Messenger
     setTimeout @startWebsocketConnection, 1000
 
   openAuthWindow: =>
-    @authWindow ?= new BrowserWindow
-      width: 300
-      height: 450
-      maxWidth: 600
-      minWidth: 200
+    @authentication ?= require('./windows/authentication')
 
-    @authWindow.loadURL "file://#{__dirname}/../html/authenticate.html"
-    @authWindow.on 'close', => delete @authWindow
+    @authentication.init()
+
+  openAboutWindow: =>
+    @about ?= require('./windows/about')
+
+    @about.init()
 
   openMessageWindow: (users) =>
-    newMessageWindow = new BrowserWindow
-      width: 300
-      height: 450
-      maxWidth: 600
-      minWidth: 300
+    @new_message ?= require('./windows/new_message')
 
-    args = encodeURIComponent users
-
-    newMessageWindow
-      .loadURL "file://#{__dirname}/../html/new_message.html##{args}"
-
-    newMessageWindow
-      .on 'close', =>
-        delete @newMessageWindows[newMessageWindow.id]
-
-    @newMessageWindows[newMessageWindow.id] = newMessageWindow
+    @new_message.init(users)
 
 module.exports = Messenger

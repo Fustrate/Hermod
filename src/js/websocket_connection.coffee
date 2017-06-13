@@ -52,12 +52,16 @@ class WebsocketConnection
 
       return
 
-    # console.log 'websocket sent', message
+    if @debug
+      console.log 'Sent', message
 
     @connection.sendUTF message
 
   received: (name, data) =>
     callbacks = @eventListeners[name]
+
+    if @debug
+      console.log 'Received', name, data
 
     if callbacks
       callback data for callback in callbacks

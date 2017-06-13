@@ -50,6 +50,7 @@ class MainWindow
     localShortcut.register @window, 'Alt+A', @selectAll
     localShortcut.register @window, 'Alt+D', @deselectAll
     localShortcut.register @window, 'Alt+N', @newMessage
+    localShortcut.register @window, 'Alt+I', @about
 
   openUsersTab: =>
     @tabs.users.button.classList.toggle 'active', true
@@ -154,16 +155,19 @@ class MainWindow
     for user in document.getElementsByClassName('user')
       user.classList.toggle 'selected', false
 
-  newMessage: ->
+  newMessage: =>
     selectedUsers = []
 
     for user in document.getElementsByClassName('user')
       if user.classList.contains 'selected'
-        selectedUsers.push user.user
+        selectedUsers.push { id: user.user.id, username: user.user.username }
 
     ipcRenderer.send 'new_message', JSON.stringify(selectedUsers)
 
     @buttons.new_message.blur()
+
+  about: ->
+    ipcRenderer.send 'about'
 
   clickedUser: (event) ->
     event.target.classList.toggle 'selected'
