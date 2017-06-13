@@ -40,6 +40,8 @@ class WebsocketConnection
     @eventListeners[name] ?= []
     @eventListeners[name].push callback
 
+    @
+
   isOpen: =>
     @connection and @connection.state is 'open'
 
