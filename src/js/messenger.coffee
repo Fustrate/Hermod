@@ -10,16 +10,19 @@ class Messenger
   @IDLE_TIME: 10 * 60 * 1000
   @DEBUG: true
 
-  mainWindow: null
   websocket: null
   userList: []
   userStatuses: {}
 
-  # Windows for each active conversation
-  conversations: {}
-
   status: 'online'
   idle: false
+
+  windows:
+    about: require('./windows/about')
+    authentication: require('./windows/authentication')
+    conversations: require('./windows/conversation')
+    main: require('./windows/main')
+    new_messages: require('./windows/new_message')
 
   constructor: ->
     setInterval @checkIdleTime, 1000
@@ -28,16 +31,40 @@ class Messenger
       if @authToken
         @openMainWindow()
       else
-        @openAuthWindow()
+        @windows.authentication.init()
 
     electron.powerMonitor
       .on 'sleep', @disconnectWebsocket
       .on 'wake', @reconnectWebsocket
 
     ipcMain.on 'new_message', (event, users) =>
-      @openMessageWindow(users)
+      @windows.new_messages.init(users)
 
-    ipcMain.on 'about', @openAboutWindow
+    ipcMain.on 'about', =>
+      @windows.about.init()
+
+  openMainWindow: =>
+    @windows.main.init()
+
+    setTimeout @startWebsocketConnection, 1000
+
+  startWebsocketConnection: =>
+    return if @websocket
+
+    @websocket = new WebsocketConnection @authToken, @constructor.DEBUG
+
+    @websocket
+      .on 'connection.authenticated', @connectionAuthenticated
+      .on 'connection.closed', @connectionClosed
+      .on 'connection.failed', @connectionFailed
+      .on 'connection.opened', @connectionOpened
+      .on 'employee.unread_count', @updateUnreadCount
+      .on 'employees.list', @updateUserList
+      .on 'employees.statuses', @updateStatuses
+      .on 'message.new', @openConversationWindow
+      .on 'message.sent', @messageSent
+
+    @websocket.connect()
 
   disconnectWebsocket: ->
 
@@ -46,109 +73,56 @@ class Messenger
 
     @websocket.connect()
 
-  startWebsocketConnection: =>
-    @websocket = new WebsocketConnection @authToken, @constructor.DEBUG
-
-    @websocket.on 'employees.list',           @updateUserList
-    @websocket.on 'employees.statuses',       @updateStatuses
-    @websocket.on 'connection.authenticated', @connectionAuthenticated
-    @websocket.on 'unread_count',             @updateUnreadCount
-    @websocket.on 'new_message',              @showConversation
-    @websocket.on 'message.sent',             @messageSent
-
-    @websocket.on 'connection.failed', =>
-      @mainWindow?.webContents.send 'setConnectionStatus', 'Connection Failed'
-
-    @websocket.on 'connection.opened', =>
-      @mainWindow?.webContents.send 'setConnectionStatus', 'Connected'
-
-    @websocket.on 'connection.closed', =>
-      @mainWindow?.webContents.send 'setConnectionStatus', 'Disconnected'
-
-    @websocket.connect()
-
-  messageSent: ->
-
-  updateUserList: (@userList) =>
-    @mainWindow.webContents.send 'employees_list', @userList
-
-  connectionAuthenticated: (user_info) =>
-    @id = user_info.id
-    @editor =
-      font_family: user_info.font_family
-      font_size: user_info.font_size
-      font_color: user_info.font_color
-
-  updateStatuses: (@userStatuses) =>
-    @mainWindow.webContents.send 'employees_statuses', @userStatuses
-    @mainWindow.webContents.send 'setDisplayedStatus', @userStatuses[@id]
-
-  updateUnreadCount: (count) =>
-    @unread = parseInt count, 10
-    @mainWindow.webContents.send 'unread_count', @unread
-
-    app.setBadgeCount @unread
-
-  showConversation: (conversation) ->
-    unless @conversations[conversation.id]
-      @conversations[conversation.id] = new BrowserWindow
-        width: 600
-        height: 720
-        minWidth: 200
-        show: false
-
-      @conversations[conversation.id]
-        .loadURL "file://#{__dirname}/../html/conversation.html"
-      @conversations[conversation.id]
-        .on 'closed', =>
-          delete @conversations[conversation.id]
-        .on 'focus', =>
-          @conversations[conversation.id].setAlwaysOnTop(false)
-        .once 'ready-to-show', =>
-          @conversations[conversation.id].show()
-
-    @conversations[conversation.id].webContents.send 'update', conversation
-    @conversations[conversation.id]
-      .flashFrame(true)
-      .setAlwaysOnTop(true)
-
   checkIdleTime: =>
     return unless @websocket
 
     if idle.getIdleTime() < @constructor.IDLE_TIME
       return unless @idle
 
-      @websocket.send 'user.status', @status
+      @websocket.send 'employee.status', @status
       @idle = false
     else if not @idle
       @idle = true
-      @websocket.send 'user.status', 'idle'
+      @websocket.send 'employee.status', 'idle'
 
-  openMainWindow: =>
-    @mainWindow ?= new BrowserWindow
-      width: 600
-      height: 600
-      maxWidth: 600
-      minWidth: 200
+  # ----------------------------------------------------------------------------
+  # Websocket Callbacks
+  # ----------------------------------------------------------------------------
 
-    @mainWindow.loadURL "file://#{__dirname}/../html/main.html"
-    @mainWindow.focus()
+  openConversationWindow: (conversation) =>
+    @windows.conversations.init(conversation)
 
-    setTimeout @startWebsocketConnection, 1000
+  messageSent: ->
 
-  openAuthWindow: =>
-    @authentication ?= require('./windows/authentication')
+  updateUserList: (@userList) =>
+    @windows.main.send 'employees_list', @userList
 
-    @authentication.init()
+  connectionFailed: =>
+    @windows.main.send 'setConnectionStatus', 'Connection Failed'
 
-  openAboutWindow: =>
-    @about ?= require('./windows/about')
+  connectionOpened: =>
+    @windows.main.send 'setConnectionStatus', 'Connected'
 
-    @about.init()
+  connectionClosed: =>
+    @windows.main.send 'setConnectionStatus', 'Disconnected'
 
-  openMessageWindow: (users) =>
-    @new_message ?= require('./windows/new_message')
+  connectionAuthenticated: (user_info) =>
+    @id = user_info.id
 
-    @new_message.init(users)
+    @editor =
+      font_family: user_info.font_family
+      font_size: user_info.font_size
+      font_color: user_info.font_color
+
+  updateStatuses: (@userStatuses) =>
+    @windows.main.send 'employees_statuses', @userStatuses
+    @windows.main.send 'setDisplayedStatus', @userStatuses[@id]
+
+  updateUnreadCount: (count) =>
+    @unread = parseInt count, 10
+
+    @windows.main.send 'unread_count', @unread
+
+    app.setBadgeCount @unread
 
 module.exports = Messenger
