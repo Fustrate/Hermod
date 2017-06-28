@@ -19,7 +19,7 @@
     "compile:html": "mkdir -p compiled/html; cp -R src/html compiled",
     "compile:fonts": "mkdir -p compiled/fonts; cp -R src/fonts compiled",
     "pack": "electron-builder --dir",
-    "dist:win": "electron-builder -w",
+    "dist:win": "electron-builder -w --publish=never",
     "dist:mac": "electron-builder -m"
   },
   "dependencies": {
