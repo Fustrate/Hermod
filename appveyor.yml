@@ -16,7 +16,6 @@ install:
   - yarn add coffeescript sass electron-builder --dev
 
 build_script:
-  - yarn compile:all
   - yarn dist:win
 
 test: off

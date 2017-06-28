@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>VMG Messenger</title>
+    <link rel="stylesheet" href="../css/main.css">
+  </head>
+  <body>
+    <div id="tabs">
+      <span id="tab-users" class="active"></span>
+      <span id="tab-messages"></span>
+    </div>
+    <div id="content">
+      <div id="content-users" class="active">
+        <div class="scrollable" id="user-list"></div>
+        <div class="content-buttons">
+          <button id="new-message">New Message</button>
+        </div>
+      </div>
+      <div id="content-messages">
+        <div class="scrollable" id="messages-list">
+          Messages!
+        </div>
+        <div class="content-buttons">
+          <button id="previous-page"></button>
+          <button id="next-page"></button>
+        </div>
+      </div>
+    </div>
+    <div id="footer-bar">
+      <span id="status-indicator">Offline</span>
+      <span id="connection-indicator">Disconnected</span>
+    </div>
+    <script>require('../js/pages/main.js')</script>
+  </body>
+</html>
