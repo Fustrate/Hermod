@@ -1,6 +1,15 @@
 {
   "name": "Hermod",
+  "description": "",
   "version": "0.0.1",
+  "author": {
+    "name": "Steven Hoffman",
+    "email": "admin@valenciamgmt.com",
+    "url": "https://valencia.management/"
+  },
+  "repository": "https://github.com/ValenciaMgmt/Hermod",
+  "license": "UNLICENSED",
+  "private": true,
   "main": "./dist/js/index.js",
   "scripts": {
     "start": "npm run compile:all && ./node_modules/.bin/electron .",
@@ -9,30 +18,28 @@
     "compile:css": "sass -Cq --update src/css:dist/css --sourcemap=none",
     "compile:html": "mkdir -p dist/html; cp -R src/html dist",
     "compile:fonts": "mkdir -p dist/fonts; cp -R src/fonts dist",
-    "pack": "build --dir",
-    "dist": "build"
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "dependencies": {
     "@paulcbetts/system-idle-time": "^1.0.4",
     "application-config": "^1.0.1",
     "arch": "^2.1.0",
-    "electron-localshortcut": "^2.0.0",
+    "electron-localshortcut": "^2.0.2",
     "keytar": "^4.0.3",
     "node-notifier": "^5.1.2",
+    "process-nextick-args": "^1.0.7",
     "request": "^2.81.0",
     "websocket": "^1.0.24"
   },
   "devDependencies": {
     "coffeescript": "^1.12.6",
     "electron": "^1.7.3",
-    "electron-builder": "^18.1.0",
+    "electron-builder": "^19.8.0",
     "electron-rebuild": "^1.5.11"
   },
   "build": {
     "appId": "com.valenciamgmt.hermod",
     "productName": "VMG Messenger"
-  },
-  "repository": "https://github.com/ValenciaMgmt/Hermod",
-  "license": "UNLICENSED",
-  "private": true
+  }
 }
