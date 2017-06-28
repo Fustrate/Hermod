@@ -19,9 +19,9 @@
     "compile:html": "mkdir -p compiled/html; cp -R src/html compiled",
     "compile:fonts": "mkdir -p compiled/fonts; cp -R src/fonts compiled",
     "pack": "electron-builder --dir",
-    "dist:win": "electron-builder -w",
+    "dist:win": "electron-builder -w --publish=onTag",
     "dist:mac": "electron-builder -m",
-    "postinstall": "install-app-deps"
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
     "@paulcbetts/system-idle-time": "^1.0.4",
