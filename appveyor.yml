@@ -13,7 +13,7 @@ init:
 install:
   - ps: Install-Product node 8 x64
   - yarn install
-  - yarn add coffeescript sass electron-builder --dev
+  - yarn add electron-builder --dev
 
 build_script:
   - yarn dist:win
