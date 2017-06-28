@@ -20,7 +20,8 @@
     "compile:fonts": "mkdir -p compiled/fonts; cp -R src/fonts compiled",
     "pack": "electron-builder --dir",
     "dist:win": "electron-builder -w --publish=never",
-    "dist:mac": "electron-builder -m"
+    "dist:mac": "electron-builder -m",
+    "postinstall": "install-app-deps"
   },
   "dependencies": {
     "@paulcbetts/system-idle-time": "^1.0.4",
