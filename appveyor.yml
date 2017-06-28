@@ -16,6 +16,6 @@ install:
   - yarn add electron-builder --dev
 
 build_script:
-  - yarn dist
+  - yarn dist:win
 
 test: off
