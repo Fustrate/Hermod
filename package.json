@@ -8,12 +8,8 @@
   "private": true,
   "main": "./compiled/js/index.js",
   "scripts": {
-    "start": "npm run compile:all && ./node_modules/.bin/electron .",
-    "compile:all": "npm run compile:js && npm run compile:css && npm run compile:html && npm run compile:fonts",
-    "compile:js": "coffee --compile --output compiled/js src/js",
-    "compile:css": "sass -Cq --update src/css:compiled/css --sourcemap=none",
-    "compile:html": "mkdir -p compiled/html; cp -R src/html compiled",
-    "compile:fonts": "mkdir -p compiled/fonts; cp -R src/fonts compiled",
+    "start": "npm run compile && ./node_modules/.bin/electron .",
+    "compile": "node bin/compile.js",
     "pack": "electron-builder --dir",
     "dist:win": "electron-builder -w",
     "dist:mac": "electron-builder -m",
@@ -25,15 +21,17 @@
     "arch": "^2.1.0",
     "electron-localshortcut": "^2.0.2",
     "keytar": "^4.0.3",
+    "mkdirp": "^0.5.1",
     "node-notifier": "^5.1.2",
     "process-nextick-args": "^1.0.7",
     "request": "^2.81.0",
+    "rimraf": "^2.6.1",
     "websocket": "^1.0.24"
   },
   "devDependencies": {
     "coffeescript": "^1.12.6",
-    "electron": "^1.7.3",
-    "electron-builder": "^19.8.0",
+    "electron": "^1.7.4",
+    "electron-builder": "^19.11.1",
     "electron-rebuild": "^1.5.11"
   }
 }
