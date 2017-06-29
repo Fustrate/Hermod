@@ -21,17 +21,17 @@
     "arch": "^2.1.0",
     "electron-localshortcut": "^2.0.2",
     "keytar": "^4.0.3",
-    "mkdirp": "^0.5.1",
     "node-notifier": "^5.1.2",
     "process-nextick-args": "^1.0.7",
     "request": "^2.81.0",
-    "rimraf": "^2.6.1",
     "websocket": "^1.0.24"
   },
   "devDependencies": {
     "coffeescript": "^1.12.6",
     "electron": "^1.7.4",
     "electron-builder": "^19.11.1",
-    "electron-rebuild": "^1.5.11"
+    "electron-rebuild": "^1.5.11",
+    "mkdirp": "^0.5.1",
+    "rimraf": "^2.6.1"
   }
 }

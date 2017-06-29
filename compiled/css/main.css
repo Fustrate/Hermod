@@ -2048,7 +2048,8 @@ table {
 .fa-fonticons:before {
   content: "\f280"; }
 
-html, body {
+html,
+body {
   height: 100%;
   overflow: hidden;
   padding: 0 0 64px;
