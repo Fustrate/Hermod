@@ -2,7 +2,7 @@ const os = require('os')
 const path = require('path')
 const fs = require('fs')
 const exec = require('child_process').execSync
-// const rimraf = require('rimraf')
+const rimraf = require('rimraf')
 const mkdirp = require('mkdirp')
 const coffee = require('coffeescript')
 
@@ -11,7 +11,7 @@ var platform = os.platform()
 function copyFolder(folder) {
   if (platform == 'win32') {
     exec('xcopy src\\' + folder + ' compiled\\' + folder)
-  } else if (platform == 'osx') {
+  } else if (platform == 'darwin') {
     exec('cp -R src/' + folder + ' compiled')
   }
 }
@@ -36,10 +36,16 @@ function walk(dir, callback) {
 
 var compile = {
   all: function(){
-    compile.css()
-    compile.js()
-    compile.html()
-    compile.fonts()
+    rimraf('compiled', function(err) {
+      if (err) {
+        throw err
+      }
+
+      compile.css()
+      compile.js()
+      compile.html()
+      compile.fonts()
+    })
   },
   css: function() {
     mkdirp('compiled/css', function() {
