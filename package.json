@@ -2,12 +2,8 @@
   "name": "Hermod",
   "description": "Intra-office messaging",
   "version": "0.0.1",
-  "author": {
-    "name": "Steven Hoffman",
-    "email": "admin@valenciamgmt.com",
-    "url": "https://valencia.management/"
-  },
-  "repository": "https://github.com/ValenciaMgmt/Hermod",
+  "author": "Steven Hoffman <https://valencia.management/>",
+  "repository": "https://github.com/Fustrate/Hermod",
   "license": "UNLICENSED",
   "private": true,
   "main": "./compiled/js/index.js",
@@ -19,7 +15,7 @@
     "compile:html": "mkdir -p compiled/html; cp -R src/html compiled",
     "compile:fonts": "mkdir -p compiled/fonts; cp -R src/fonts compiled",
     "pack": "electron-builder --dir",
-    "dist:win": "electron-builder -w --publish=onTag",
+    "dist:win": "electron-builder -w",
     "dist:mac": "electron-builder -m",
     "postinstall": "electron-builder install-app-deps"
   },
